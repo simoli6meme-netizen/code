@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.my.work.code2026.mapper.OrdersMapper">
+
+    <!-- 通用查询条件（不依赖 order_detail 联表，供 selectAll / selectCount 复用） -->
+    <sql id="orderFilters">
+        <if test="orderNo != null"> and orders.order_no like concat('%', #{orderNo}, '%')</if>
+        <if test="userId != null"> and orders.user_id = #{userId}</if>
+        <if test="status != null"> and orders.status = #{status}</if>
+        <if test="deliverType != null"> and orders.deliver_type = #{deliverType}</if>
+        <if test="deliveryId != null"> and orders.delivery_id = #{deliveryId}</if>
+        <if test="unassigned != null and unassigned"> and orders.delivery_id is null</if>
+        <if test="statuses != null and statuses.size() > 0">
+            and orders.status in
+            <foreach collection="statuses" item="st" open="(" separator="," close=")">#{st}</foreach>
+        </if>
+    </sql>
+
+    <select id="selectAll" resultType="org.my.work.code2026.entity.Orders">
+        select orders.*,
+               user.name as userName,
+               (select name from delivery where delivery.id = orders.delivery_id) as deliveryName
+        from `orders`
+        left join user on orders.user_id = user.id
+        left join order_detail on order_detail.order_id = orders.id
+        <where>
+            <include refid="orderFilters"/>
+            <if test="goodsName != null"> and order_detail.goods_name like concat('%', #{goodsName}, '%')</if>
+        </where>
+        group by orders.id
+        order by orders.id desc
+    </select>
+
+    <select id="selectById" resultType="org.my.work.code2026.entity.Orders">
+        select * from `orders` where id = #{id}
+    </select>
+
+    <!-- 数量统计（外卖端工作台 / 各列表计数） -->
+    <select id="selectCount" resultType="int">
+        select count(*) from `orders`
+        <where>
+            <include refid="orderFilters"/>
+        </where>
+    </select>
+
+    <delete id="deleteById">
+        delete from `orders` where id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="org.my.work.code2026.entity.Orders" useGeneratedKeys="true" keyProperty="id">
+        insert into `orders`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="orderNo != null">order_no,</if>
+            <if test="total != null">total,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="deliveryId != null">delivery_id,</if>
+            <if test="status != null">status,</if>
+            <if test="time != null">time,</if>
+            <if test="deliverType != null">deliver_type,</if>
+            <if test="address != null">address,</if>
+            <if test="addressX != null">address_x,</if>
+            <if test="addressY != null">address_y,</if>
+            <if test="deliver != null">deliver,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="total != null">#{total},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="deliveryId != null">#{deliveryId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="time != null">#{time},</if>
+            <if test="deliverType != null">#{deliverType},</if>
+            <if test="address != null">#{address},</if>
+            <if test="addressX != null">#{addressX},</if>
+            <if test="addressY != null">#{addressY},</if>
+            <if test="deliver != null">#{deliver},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="org.my.work.code2026.entity.Orders">
+        update `orders`
+        <set>
+            <if test="orderNo != null">
+                order_no = #{orderNo},
+            </if>
+            <if test="total != null">
+                total = #{total},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="deliveryId != null">
+                delivery_id = #{deliveryId},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="deliverType != null">
+                deliver_type = #{deliverType},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="addressX != null">
+                address_x = #{addressX},
+            </if>
+            <if test="addressY != null">
+                address_y = #{addressY},
+            </if>
+            <if test="deliver != null">
+                deliver = #{deliver},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

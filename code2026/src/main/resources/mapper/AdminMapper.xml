@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.my.work.code2026.mapper.AdminMapper">
+
+    <select id="selectAll" resultType="org.my.work.code2026.entity.Admin">
+        select * from `admin`
+        <where>
+            <if test="name != null"> and name like concat('%', #{name}, '%')</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectById" resultType="org.my.work.code2026.entity.Admin">
+        select * from `admin` where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from `admin` where id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="org.my.work.code2026.entity.Admin" useGeneratedKeys="true">
+        insert into `admin`(id, username, password, name, avatar, role)
+        values (#{id}, #{username}, #{password}, #{name}, #{avatar}, #{role})
+    </insert>
+
+    <update id="updateById" parameterType="org.my.work.code2026.entity.Admin">
+        update `admin` set username = #{username}, password = #{password}, name = #{name}, avatar = #{avatar}, role = #{role}
+        where id = #{id} 
+    </update>
+
+</mapper>

@@ -1,0 +1,29 @@
+# ===== 依赖（绝对不要入库）=====
+node_modules/
+**/node_modules/
+
+# ===== 构建产物 =====
+dist/
+dist-ssr/
+target/
+*.class
+*.jar
+*.war
+
+# ===== IDE / 编辑器 =====
+.idea/
+*.iml
+.vscode/
+.project
+
+# ===== 项目内部 / 工具目录（非源码，不入库）=====
+.workbuddy/
+.dsh-tools/
+
+# ===== 系统文件 =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== 日志 =====
+*.log

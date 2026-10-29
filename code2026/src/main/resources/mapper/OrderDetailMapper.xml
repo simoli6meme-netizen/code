@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.my.work.code2026.mapper.OrderDetailMapper">
+
+    <select id="selectAll" resultType="org.my.work.code2026.entity.OrderDetail">
+        select * from `order_detail`
+        <where>
+            <if test="orderId != null">order_id = #{orderId} </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectById" resultType="org.my.work.code2026.entity.OrderDetail">
+        select * from `order_detail` where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from `order_detail` where id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="org.my.work.code2026.entity.OrderDetail" useGeneratedKeys="true">
+        insert into `order_detail`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="goodsId != null">goods_id,</if>
+            <if test="num != null">num,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="goodsImg != null">goods_img,</if>
+            <if test="goodsName != null">goods_name,</if>
+            <if test="goodsPrice != null">goods_price,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="num != null">#{num},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="goodsImg != null">#{goodsImg},</if>
+            <if test="goodsName != null">#{goodsName},</if>
+            <if test="goodsPrice != null">#{goodsPrice},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="org.my.work.code2026.entity.OrderDetail">
+        update `order_detail`
+        <set>
+            <if test="id != null">
+                id = #{id},
+            </if>
+            <if test="goodsId != null">
+                goods_id = #{goodsId},
+            </if>
+            <if test="num != null">
+                num = #{num},
+            </if>
+            <if test="orderId != null">
+                order_id = #{orderId},
+            </if>
+            <if test="goodsImg != null">
+                goods_img = #{goodsImg},
+            </if>
+            <if test="goodsName != null">
+                goods_name = #{goodsName},
+            </if>
+            <if test="goodsPrice != null">
+                goods_price = #{goodsPrice},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

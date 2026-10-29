@@ -1,0 +1,58 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    color: #333;
+    font-size: 14px;
+}
+
+a {
+    color: #1967e3;
+    text-decoration: none;
+}
+
+th {
+    color: #333 !important;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,.1);
+}
+.front-container{
+    width: 70%;
+    margin: 0 auto;
+    padding-top: 20px
+}
+.myEff{
+    max-width:50%;
+}
+.line1 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.line2 {
+    word-break: break-all;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; /* 超出几行省略 */
+    overflow: hidden;
+}
+.line2:hover{
+    color: #F64848;
+}
+.line2_1 {
+    word-break: break-all;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; /* 超出几行省略 */
+    overflow: hidden;
+}

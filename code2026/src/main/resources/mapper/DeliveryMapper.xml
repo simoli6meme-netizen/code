@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 必须对应 Mapper 接口的全限定名 -->
+<mapper namespace="org.my.work.code2026.mapper.DeliveryMapper">
+
+    <select id="selectByUsername" resultType="org.my.work.code2026.entity.Delivery">
+        select * from `delivery` where username = #{username}
+    </select>
+
+    <select id="selectAll" resultType="org.my.work.code2026.entity.Delivery">
+        select * from `delivery`
+        <where>
+            <if test="name != null and name != ''">
+                (name like concat('%', #{name}, '%') or phone like concat('%', #{name}, '%'))
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectById" resultType="org.my.work.code2026.entity.Delivery">
+        select * from `delivery` where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from `delivery` where id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="org.my.work.code2026.entity.Delivery">
+        insert into `delivery` (username, password, name, avatar, role, phone)
+        values (#{username}, #{password}, #{name}, #{avatar}, #{role}, #{phone})
+    </insert>
+
+    <!-- 只更新传入的非空字段，避免部分更新时把姓名 / 角色 / 手机号清空 -->
+    <update id="updateById" parameterType="org.my.work.code2026.entity.Delivery">
+        update `delivery`
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="role != null">role = #{role},</if>
+            <if test="phone != null">phone = #{phone},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.my.work.code2026.mapper.RechargeMapper">
+
+    <select id="selectAll" resultType="org.my.work.code2026.entity.Recharge">
+        select recharge.*, user.name as userName from `recharge`
+        left join user on recharge.user_id = user.id
+        <where>
+            <if test="userName != null"> and user.name like concat('%', #{userName}, '%')</if>
+            <if test="time != null"> and recharge.time like concat('%', #{time}, '%')</if>
+            <if test="userId != null"> and recharge.user_id = #{userId}</if>
+        </where>
+        order by recharge.id desc
+    </select>
+
+    <select id="selectById" resultType="org.my.work.code2026.entity.Recharge">
+        select * from `recharge` where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from `recharge` where id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="org.my.work.code2026.entity.Recharge" useGeneratedKeys="true">
+        insert into `recharge`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="money != null">money,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="type != null">type,</if>
+            <if test="time != null">time,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="money != null">#{money},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="type != null">#{type},</if>
+            <if test="time != null">#{time},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="org.my.work.code2026.entity.Recharge">
+        update `recharge`
+        <set>
+            <if test="id != null">
+                id = #{id},
+            </if>
+            <if test="money != null">
+                money = #{money},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

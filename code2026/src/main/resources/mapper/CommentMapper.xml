@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.my.work.code2026.mapper.CommentMapper">
+
+    <select id="selectAll" resultType="org.my.work.code2026.entity.Comment">
+        select `comment`.*, user.name as userName, user.avatar as userAvatar, orders.order_no as orderNo, goods.name as goodsName, goods.img as goodsImg
+        from `comment`
+        left join user on `comment`.user_id = user.id
+        left join orders on `comment`.order_id = orders.id
+        left join goods on `comment`.goods_id = goods.id
+        <where>
+            <if test="content != null"> and `comment`.content like concat('%', #{content}, '%')</if>
+            <if test="userId != null"> and `comment`.user_id = #{userId}</if>
+            <if test="goodsId != null"> and `comment`.goods_id = #{goodsId}</if>
+            <if test="orderId != null"> and `comment`.order_id = #{orderId}</if>
+            <if test="goodsName != null"> and goods.name like concat('%', #{goodsName}, '%')</if>
+        </where>
+        order by `comment`.id desc
+    </select>
+
+    <select id="selectById" resultType="org.my.work.code2026.entity.Comment">
+        select * from `comment` where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from `comment` where id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="org.my.work.code2026.entity.Comment" useGeneratedKeys="true">
+        insert into `comment`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="score != null">score,</if>
+            <if test="content != null">content,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="time != null">time,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="goodsId != null">goods_id,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="score != null">#{score},</if>
+            <if test="content != null">#{content},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="time != null">#{time},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="goodsId != null">#{goodsId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="org.my.work.code2026.entity.Comment">
+        update `comment`
+        <set>
+            <if test="id != null">
+                id = #{id},
+            </if>
+            <if test="score != null">
+                score = #{score},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="orderId != null">
+                order_id = #{orderId},
+            </if>
+            <if test="goodsId != null">
+                goods_id = #{goodsId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

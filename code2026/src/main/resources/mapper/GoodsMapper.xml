@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.my.work.code2026.mapper.GoodsMapper">
+
+    <select id="selectAll" resultType="org.my.work.code2026.entity.Goods">
+        select `goods`.*, category.name as categoryName from `goods`
+        left join category on `goods`.category_id = category.id
+        <where>
+            <if test="name != null"> and `goods`.name like concat('%', #{name}, '%')</if>
+            <if test="categoryId != null"> and `goods`.category_id=#{categoryId}</if>
+            <if test="status != null"> and `goods`.status=#{status}</if>
+        </where>
+        order by `goods`.id desc
+    </select>
+
+    <select id="selectById" resultType="org.my.work.code2026.entity.Goods">
+        select * from `goods` where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from `goods` where id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="org.my.work.code2026.entity.Goods" useGeneratedKeys="true">
+            insert into `goods`
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="name != null">name,</if>
+                <if test="img != null">img,</if>
+                <if test="price != null">price,</if>
+                <if test="description != null">description,</if>
+                <if test="content != null">content,</if>
+                <if test="store != null">store,</if>
+                <if test="categoryId != null">category_id,</if>
+                <if test="status != null">status,</if>
+                <if test="views != null">views,</if>
+                <if test="saleCount != null">sale_count,</if>
+                <if test="time != null">time,</if>
+                <if test="recommend != null">recommend,</if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                <if test="name != null">#{name},</if>
+                <if test="img != null">#{img},</if>
+                <if test="price != null">#{price},</if>
+                <if test="description != null">#{description},</if>
+                <if test="content != null">#{content},</if>
+                <if test="store != null">#{store},</if>
+                <if test="categoryId != null">#{categoryId},</if>
+                <if test="status != null">#{status},</if>
+                <if test="views != null">#{views},</if>
+                <if test="saleCount != null">#{saleCount},</if>
+                <if test="time != null">#{time},</if>
+                <if test="recommend != null">#{recommend},</if>
+            </trim>
+    </insert>
+
+    <update id="updateById" parameterType="org.my.work.code2026.entity.Goods">
+            update `goods`
+            <set>
+                <if test="id != null">
+                    id = #{id},
+                </if>
+                <if test="name != null">
+                    name = #{name},
+                </if>
+                <if test="img != null">
+                    img = #{img},
+                </if>
+                <if test="price != null">
+                    price = #{price},
+                </if>
+                <if test="description != null">
+                    description = #{description},
+                </if>
+                <if test="content != null">
+                    content = #{content},
+                </if>
+                <if test="store != null">
+                    store = #{store},
+                </if>
+                <if test="categoryId != null">
+                    category_id = #{categoryId},
+                </if>
+                <if test="status != null">
+                    status = #{status},
+                </if>
+                <if test="views != null">
+                    views = #{views},
+                </if>
+                <if test="saleCount != null">
+                    sale_count = #{saleCount},
+                </if>
+                <if test="time != null">
+                    time = #{time},
+                </if>
+                <if test="recommend != null">
+                    recommend = #{recommend},
+                </if>
+            </set>
+            where id = #{id}
+    </update>
+
+    <!-- 推荐商品 -->
+    <select id="selectRecommended" resultType="org.my.work.code2026.entity.Goods">
+        select `goods`.*, category.name as categoryName from `goods`
+                                                                 left join category on `goods`.category_id = category.id
+        where `goods`.recommend = '是' and `goods`.status = '上架'
+        order by `goods`.id desc
+            limit 10
+    </select>
+
+    <!-- 热销商品（按销量降序） -->
+    <select id="selectHotGoods" resultType="org.my.work.code2026.entity.Goods">
+        select `goods`.*, category.name as categoryName from `goods`
+                                                                 left join category on `goods`.category_id = category.id
+        where `goods`.status = '上架'
+        order by `goods`.sale_count desc
+            limit 10
+    </select>
+
+    <update id="incrementViews">
+        UPDATE goods SET views = IFNULL(views, 0) + 1 WHERE id = #{id}
+    </update>
+
+</mapper>

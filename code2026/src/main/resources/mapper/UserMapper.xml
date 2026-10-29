@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 必须对应 Mapper 接口的全限定名 -->
+<mapper namespace="org.my.work.code2026.mapper.UserMapper">
+
+    <select id="selectAll" resultType="org.my.work.code2026.entity.User">
+        select * from `user`
+        <where>
+            <if test="name != null">name like concat('%', #{name}, '%')</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectByUsername"  resultType="org.my.work.code2026.entity.User">
+        select * from `user` where username = #{username}
+    </select>
+
+    <select id="selectById" resultType="org.my.work.code2026.entity.User">
+        select * from `user` where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from user where id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="org.my.work.code2026.entity.User">
+        insert into `user` (username,password,name,avatar,role,account)
+        values (#{username},#{password},#{name},#{avatar},#{role},#{account})
+    </insert>
+
+    <update id="updateById">
+        update `user` set username=#{username},password=#{password},
+                          name=#{name},avatar=#{avatar},role=#{role},
+                          account=#{account}
+        where id = #{id}
+    </update>
+
+</mapper>

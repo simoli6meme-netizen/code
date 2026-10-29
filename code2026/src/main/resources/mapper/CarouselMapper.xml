@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.my.work.code2026.mapper.CarouselMapper">
+
+    <select id="selectAll" resultType="org.my.work.code2026.entity.Carousel">
+        select carousel.*, goods.name as goodsName from `carousel`
+        left join goods on carousel.goods_id = goods.id
+        <where>
+            <if test="goodsName != null"> and goods.name like concat('%', #{goodsName}, '%')</if>
+        </where>
+        order by carousel.id desc
+    </select>
+
+    <select id="selectById" resultType="org.my.work.code2026.entity.Carousel">
+        select * from `carousel` where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from `carousel` where id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="org.my.work.code2026.entity.Carousel" useGeneratedKeys="true">
+        insert into `carousel`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="goodsId != null">goods_id,</if>
+            <if test="img != null">img,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="img != null">#{img},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="org.my.work.code2026.entity.Carousel">
+        update `carousel`
+        <set>
+            <if test="id != null">
+                id = #{id},
+            </if>
+            <if test="goodsId != null">
+                goods_id = #{goodsId},
+            </if>
+            <if test="img != null">
+                img = #{img},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>
