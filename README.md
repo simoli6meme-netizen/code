@@ -1,4 +1,4 @@
-需要在code\code2026\src\main\resources\application.yml里面加入自己apiKey
+<div>需要在code\code2026\src\main\resources\application.yml里面加入自己apiKey\n</div>
 准备好后前端页面启动去powershell进入vue目录然后输入npm run dev即可打开前端
 后端直接运行即可，进入网页输入http://localhost:5173/login
 <img width="1905" height="1047" alt="屏幕截图 2026-10-29 203826" src="https://github.com/user-attachments/assets/e203d2c7-e702-4340-bec8-17e2b3d2d7a1" />
