@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
+import org.my.work.code2026.common.PasswordHelper;
 import org.my.work.code2026.entity.Account;
 import org.my.work.code2026.entity.Delivery;
 import org.my.work.code2026.exception.CustomException;
@@ -12,13 +13,15 @@ import org.my.work.code2026.mapper.DeliveryMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class DeliveryService {
 
     @Resource
     private DeliveryMapper deliveryMapper;
+
+    @Resource
+    private PasswordHelper passwordHelper;
 
     public Delivery login(Account account) {
         // 1. 参数校验
@@ -31,15 +34,18 @@ public class DeliveryService {
 
         // 3. 用户不存在 或 密码不匹配 → 统一提示（防用户名枚举）
         if (ObjectUtil.isNull(delivery)
-                || !Objects.equals(account.getPassword(), delivery.getPassword())) {
+                || !passwordHelper.matches(account.getPassword(), delivery.getPassword())) {
             throw new CustomException("账号或密码错误");
         }
-        // 如果密码是加密存储，上面这行改为：
-        // || !passwordEncoder.matches(account.getPassword(), delivery.getPassword())
 
         // 4. 可选：判断账号状态（禁用/审核中）
         // if ("0".equals(delivery.getStatus())) throw new CustomException("账号已被禁用");
 
+        // 渐进式升级：命中历史明文则就地改成密文
+        if (passwordHelper.needsUpgrade(delivery.getPassword())) {
+            deliveryMapper.updatePasswordById(delivery.getId(), passwordHelper.encode(account.getPassword()));
+        }
+        delivery.setPassword(null);
         return delivery;
     }
 
@@ -85,6 +91,8 @@ public class DeliveryService {
         if (StrUtil.isBlank(delivery.getName())) {
             delivery.setName(delivery.getUsername());
         }
+        // 统一落库为 BCrypt 密文（含上面补的默认密码）
+        delivery.setPassword(passwordHelper.encode(delivery.getPassword()));
         delivery.setRole("外卖员");
 
         // 3. 插入修正后的 delivery
@@ -98,6 +106,12 @@ public class DeliveryService {
         if (delivery.getId() == null) {
             throw new CustomException("缺少主键 ID，无法更新");
         }
+        // 同 UserService.update：没传密码时不覆盖已有密文
+        if (StrUtil.isNotBlank(delivery.getPassword())) {
+            delivery.setPassword(passwordHelper.encode(delivery.getPassword()));
+        } else {
+            delivery.setPassword(null);
+        }
         deliveryMapper.updateById(delivery);
     }
 
@@ -109,10 +123,10 @@ public class DeliveryService {
         if (ObjectUtil.isNull(db)) {
             throw new CustomException("账号不存在");
         }
-        if (!Objects.equals(account.getPassword(), db.getPassword())) {
+        if (!passwordHelper.matches(account.getPassword(), db.getPassword())) {
             throw new CustomException("原密码错误");
         }
-        db.setPassword(account.getNewPassword());
+        db.setPassword(passwordHelper.encode(account.getNewPassword()));
         deliveryMapper.updateById(db);
     }
 }

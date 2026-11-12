@@ -1,11 +1,15 @@
 package org.my.work.code2026.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Delivery extends Account{
     /** ID */
     private Integer id;
     /** 用户名 */
     private String username;
     /** 密码 */
+    /** 密码（BCrypt 密文）。WRITE_ONLY：可入参、不出参 */
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     /** 姓名 */
     private String name;

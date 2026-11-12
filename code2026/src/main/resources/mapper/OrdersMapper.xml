@@ -59,6 +59,7 @@
             <if test="deliveryId != null">delivery_id,</if>
             <if test="status != null">status,</if>
             <if test="time != null">time,</if>
+            <if test="closeDeadline != null">close_deadline,</if>
             <if test="deliverType != null">deliver_type,</if>
             <if test="address != null">address,</if>
             <if test="addressX != null">address_x,</if>
@@ -74,6 +75,7 @@
             <if test="deliveryId != null">#{deliveryId},</if>
             <if test="status != null">#{status},</if>
             <if test="time != null">#{time},</if>
+            <if test="closeDeadline != null">#{closeDeadline},</if>
             <if test="deliverType != null">#{deliverType},</if>
             <if test="address != null">#{address},</if>
             <if test="addressX != null">#{addressX},</if>
@@ -120,6 +122,26 @@
             </if>
         </set>
         where id = #{id}
+    </update>
+
+    <!-- ===== 超时自动关单 ===== -->
+
+    <!-- 只扫带截止时间且已过期的「待接单」订单；历史订单 close_deadline 为 NULL，天然不受影响 -->
+    <select id="selectExpiredIds" resultType="java.lang.Integer">
+        select id from `orders`
+        where close_deadline is not null
+          and close_deadline &lt; now()
+          and status = '待接单'
+        order by close_deadline asc
+        limit 100
+    </select>
+
+    <!-- 条件更新抢关单权：多实例/重复点击下只有一个能成功，保证退款不重复 -->
+    <update id="closeIfPending">
+        update `orders`
+        set status = '已取消', close_deadline = null
+        where id = #{id}
+          and status != '已取消'
     </update>
 
 </mapper>

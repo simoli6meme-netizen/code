@@ -32,9 +32,16 @@
     </insert>
 
     <update id="updateById">
-        update `user` set username=#{username},password=#{password},
-                          name=#{name},avatar=#{avatar},role=#{role},
-                          account=#{account}
+        update `user`
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <!-- 密码为空就不更新：否则改昵称/头像时会把 BCrypt 密文刷成 NULL，账号直接登不上 -->
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="role != null">role = #{role},</if>
+            <if test="account != null">account = #{account},</if>
+        </set>
         where id = #{id}
     </update>
 

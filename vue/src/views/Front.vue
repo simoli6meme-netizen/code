@@ -45,6 +45,7 @@ const data = reactive({
 const navList = [
   { path: '/front/home', name: '首页', icon: 'HomeFilled' },
   { path: '/front/goods', name: '精选商品', icon: 'Goods' },
+  { path: '/front/seckill', name: '限时秒杀', icon: 'AlarmClock' },
   { path: '/front/cart', name: '购物车', icon: 'ShoppingCart' },
   { path: '/front/myAddress', name: '我的地址', icon: 'Location' },
   { path: '/front/userOrders', name: '我的订单', icon: 'Tickets' }

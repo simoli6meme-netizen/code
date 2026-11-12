@@ -1,5 +1,7 @@
 package org.my.work.code2026.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * 角色用户父类
  */
@@ -9,11 +11,13 @@ public class Account {
     private String username;
     /** 名称 */
     private String name;
-    /** 密码 */
+    /** 密码：登录入参，只进不出（WRITE_ONLY） */
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     /** 角色标识 */
     private String role;
-    /** 新密码 */
+    /** 新密码：改密入参，只进不出（WRITE_ONLY） */
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String newPassword;
     /** 头像 */
     private String avatar;

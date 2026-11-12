@@ -47,6 +47,10 @@
               <el-icon><Goods /></el-icon>
               <template #title>商品信息</template>
             </el-menu-item>
+            <el-menu-item index="/manager/seckill">
+              <el-icon><AlarmClock /></el-icon>
+              <template #title>限时秒杀</template>
+            </el-menu-item>
             <el-menu-item index="/manager/carousel">
               <el-icon><PictureFilled /></el-icon>
               <template #title>轮播图信息</template>
@@ -166,6 +170,7 @@ const pageTitles = {
   '/manager/orders': '订单信息',
   '/manager/category': '商品分类',
   '/manager/goods': '商品信息',
+  '/manager/seckill': '限时秒杀',
   '/manager/carousel': '轮播图信息',
   '/manager/comment': '订单评价',
   '/manager/collect': '用户收藏',

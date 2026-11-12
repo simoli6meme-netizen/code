@@ -34,9 +34,12 @@ public class RechargeService {
     @Transactional
     public void add(Recharge recharge) {
         Integer userId = recharge.getUserId();
-        User user=userMapper.selectById(userId);
-        user.setAccount(user.getAccount().add(recharge.getMoney()));
-        userMapper.updateById(user);
+        User user = userMapper.selectById(userId);
+        if (ObjectUtil.isNull(user)) {
+            throw new CustomException("充值用户不存在");
+        }
+        // 原子加余额：读出来 add 再 updateById 会在并发充值时丢失更新
+        userMapper.restoreAccount(userId, recharge.getMoney());
         recharge.setTime(DateUtil.now());
         rechargeMapper.insert(recharge);
     }

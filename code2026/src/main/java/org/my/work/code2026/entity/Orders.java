@@ -20,6 +20,8 @@ public class Orders {
     private String status;
     /**下单时间 */
     private String time;
+    /**自动关单截止时间（只有新订单才有值，历史订单为 NULL 不参与定时任务） */
+    private String closeDeadline;
     /**配送类型 */
     private String deliverType;
 
@@ -133,6 +135,14 @@ public class Orders {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getCloseDeadline() {
+        return closeDeadline;
+    }
+
+    public void setCloseDeadline(String closeDeadline) {
+        this.closeDeadline = closeDeadline;
     }
 
     public String getDeliverType() {

@@ -81,4 +81,10 @@ public class GoodsController {
         goodsService.incrementViews(id);
         return Result.success();
     }
+
+    /** 调试用：列出当前 Redis 中的商品缓存 key，验证缓存写入与失效 */
+    @GetMapping("/cacheKeys")
+    public Result cacheKeys() {
+        return Result.success(goodsService.cacheKeys());
+    }
 }

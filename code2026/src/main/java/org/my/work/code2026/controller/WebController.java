@@ -111,7 +111,8 @@ public class WebController {
         }
 
         // ===== 2. 密码一致性校验（公共逻辑）=====
-        if (!user.getPassword().equals(user.getNewPassword())) {
+        // 这是入参自校验（两次输入是否一致），不是和数据库比，所以明文比较是对的
+        if (user.getPassword() == null || !user.getPassword().equals(user.getNewPassword())) {
             return Result.error("两次输入密码不一致");
         }
 

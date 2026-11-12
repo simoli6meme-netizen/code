@@ -1,10 +1,18 @@
 package org.my.work.code2026.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 
 public class User extends Account{
     private Integer id;
     private String username;
+    /**
+     * 密码（库里存 BCrypt 密文）。
+     * WRITE_ONLY = 允许前端传入、但绝不出现响应体里。
+     * 不能用 @JsonIgnore：User 同时是注册/新增的入参，加了会导致密码永远收不到。
+     */
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String name;
     private String role;

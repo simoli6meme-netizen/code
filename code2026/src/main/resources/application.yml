@@ -12,10 +12,19 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+  # 秒杀模块使用的 Redis：只存库存计数和一人一单标记，不做持久化存储
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 3000ms
+      database: 0
   ai:
     openai:
       base-url: https://api.deepseek.com
-      api-key: 
+      # 密钥不要写死在配置文件里：用环境变量 DEEPSEEK_API_KEY 注入。
+      # 冒号后的 sk-demo 只是默认值，保证没配环境变量时也能启动（AI 功能会报鉴权失败，其余功能正常）。
+      api-key: ${DEEPSEEK_API_KEY:sk-demo}
       chat:
         options:
           model: deepseek-chat
@@ -29,6 +38,20 @@ mybatis:
     map-underscore-to-camel-case: true
 
 fileBaseUrl: http://localhost
+
+# 超时自动关单：下单后 close-minutes 分钟仍无人接单，自动取消并退款
+# close-enabled 可以随时关掉；scan-interval-ms 是定时扫描间隔
+order:
+  close-enabled: true
+  close-minutes: 15
+  scan-interval-ms: 30000
+
+# 密码：库里的密码统一用 BCrypt（自带随机盐）存储
+# migrate-on-startup：启动时把历史明文密码一次性升级为密文；
+# 设 false 也不影响功能，登录校验通过时会就地升级（渐进式）
+security:
+  password:
+    migrate-on-startup: true
 
 logging:
   level:
